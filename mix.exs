@@ -37,7 +37,7 @@ defmodule Toy.Mixfile do
      {:gettext, "~> 0.11"},
      {:cowboy, "~> 1.0"},
 
-     {:scrivener_ecto, git: "https://github.com/drewolson/scrivener_ecto.git", branch: "master"},
+     {:scrivener_ecto, git: "https://github.com/coryodaniel/scrivener_ecto.git", branch: "master"},
      {:ja_serializer, "~> 0.10.1"},
 
      {:faker, "~> 0.5", only: [:test, :dev]}

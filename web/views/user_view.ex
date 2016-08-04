@@ -4,6 +4,7 @@ defmodule Toy.UserView do
 
   attributes [:email, :first_name, :last_name, :inserted_at, :updated_at]
 
+  def type(_user,_conn), do: "users"
   location "/api/users/:id"
 
   # has_one :author,

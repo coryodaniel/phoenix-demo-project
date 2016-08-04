@@ -13,7 +13,7 @@ defmodule Toy.UserController do
       #|> where([p], p.age > 30)
       #|> order_by(desc: :age)
       #|> preload(:friends)
-      |> Repo.paginate(conn.query_params["page"] || %{})
+      |> Repo.paginate(conn.query_params["page"])
 
     render(
       conn, "index.json-api",
