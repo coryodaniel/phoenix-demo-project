@@ -12,6 +12,27 @@
 
 Faker.start
 
+# iex -S mix phoenix.server
+# import Ecto.Query
+alias Toy.User
+alias Toy.Team
+alias Toy.Repo
+import Ecto.Query
+
+team_generator = fn(_) ->
+  changeset = Toy.Team.changeset(%Toy.Team{}, %{
+    name: Faker.Team.name,
+    color: Faker.Commerce.color
+  })
+
+  if changeset.valid? do
+    Toy.Repo.insert!(changeset)
+    IO.puts "Created: #{changeset.changes.name}"
+  end
+end
+
+Enum.each 1..5_000, team_generator
+
 user_generator = fn(_) ->
   changeset = Toy.User.registration_changeset(%Toy.User{}, %{
     first_name: Faker.Name.first_name,
@@ -20,9 +41,13 @@ user_generator = fn(_) ->
   })
 
   if changeset.valid? do
-    Toy.Repo.insert!(changeset)
+    teams = Repo.all(from t in Team, order_by: fragment("RANDOM()"), limit: 2)
+    changeset
+      |> Ecto.Changeset.put_assoc(:teams, teams)
+      |> Toy.Repo.insert!
+
     IO.puts "Created: #{changeset.changes.email}"
   end
 end
 
-Enum.each 1..100_000, user_generator
+Enum.each 1..50_000, user_generator

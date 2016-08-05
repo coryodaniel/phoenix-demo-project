@@ -8,13 +8,14 @@ defmodule Toy.Repo.Migrations.CreateUser do
     create table(:users, primary_key: false) do
       # Here we explicitly set the type of id column as uuid and assign it as primary key
       add :id, :uuid, primary_key: true
-      add :email, :citext
+      add :email, :citext, null: false
       add :first_name, :string
       add :last_name, :string
 
       timestamps()
     end
 
+    create index(:users, [:inserted_at])
     create unique_index(:users, [:email])
   end
 

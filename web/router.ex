@@ -10,5 +10,6 @@ defmodule Toy.Router do
   scope "/api", Toy do
     pipe_through :api
     resources "/users", UserController, except: [:new, :edit]
+    resources "/teams", TeamController, except: [:new, :edit]
   end
 end

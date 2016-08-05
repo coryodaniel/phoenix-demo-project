@@ -1,6 +1,18 @@
-# Toy
+# An elixir app for demonstrating JSONAPI (JaSerializer) with Phoenix
 
-To start your Phoenix app:
+## Set up
+```
+psql postgres
+CREATE USER postgres SUPERUSER;
+
+mix deps.get
+mix ecto.create
+mix ecto.migrate
+
+mix run priv/repo/seeds.exs
+```
+
+## To start your Phoenix app:
 
   * Install dependencies with `mix deps.get`
   * Create and migrate your database with `mix ecto.create && mix ecto.migrate`
@@ -8,12 +20,28 @@ To start your Phoenix app:
 
 Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
 
-Ready to run in production? Please [check our deployment guides](http://www.phoenixframework.org/docs/deployment).
+## Example Queries
 
-## Learn more
+### JSONAPI Queries
+* [x] http://localhost:4000/api/users
+* [x] http://localhost:4000/api/users?page[page_number]=10
+* [x] http://localhost:4000/api/users?page[page_number]=10&page[page_size]=1000
+* [x] http://localhost:4000/api/users?page[page_number]=10&page[page_size]=1000&fields[users]=email
+* [x] http://localhost:4000/api/users?page[page_number]=10&page[page_size]=1000&fields[users]=email&include=teams
+* [x] http://localhost:4000/api/users?page[page_number]=10&page[page_size]=1000&fields[users]=email&include=teams&fields[teams]=name
 
-  * Official website: http://www.phoenixframework.org/
-  * Guides: http://phoenixframework.org/docs/overview
-  * Docs: https://hexdocs.pm/phoenix
-  * Mailing list: http://groups.google.com/group/phoenix-talk
-  * Source: https://github.com/phoenixframework/phoenix
+### Download all users
+```bash
+curl -X GET -H "Accept: application/vnd.api+json" -H "Cache-Control: no-cache" -H "Postman-Token: 0b58cf44-dc23-578e-7ed2-c4dcab7ed87a" "http://localhost:4000/api/users?page%5Bpage_size%5D=100000" -o users.html
+```
+
+### List users and team names
+```sql
+SELECT
+  email, teams.name
+FROM
+  users
+    LEFT JOIN teams_users ON teams_users.user_id = users.id
+    INNER JOIN teams ON teams_users.team_id = teams.id
+ORDER BY email;
+```
